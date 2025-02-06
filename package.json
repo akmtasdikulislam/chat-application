@@ -1,0 +1,32 @@
+{
+  "name": "chat-application",
+  "version": "1.0.0",
+  "description": "A real-time chat application using Node.js and Socket.io",
+  "main": "app.js",
+  "scripts": {
+    "start": "set NODE_ENV=production&& nodemon app.js",
+    "producion": "set NODE_ENV=production&& node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akmtasdikulislam/chat-application.git"
+  },
+  "author": "Akm Tasdikul Islam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akmtasdikulislam/chat-application/issues"
+  },
+  "homepage": "https://github.com/akmtasdikulislam/chat-application#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-validator": "^7.2.1",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.10.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}
