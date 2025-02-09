@@ -1,14 +1,17 @@
-<%- include("./partials/header.ejs") %>
-
+<%- include('./partials/header.ejs'); %>
+    <!-- Main container for user management interface -->
     <div class="manageUser-container">
+      <!-- Page title section -->
       <div id="title">
         <h2>Manage Users</h2>
       </div>
 
+      <!-- New user addition button -->
       <div class="new-message-container new-user">
         <a href="#" onclick="openModal()">+</a>
       </div>
 
+      <!-- Users data table section -->
       <div id="users-table">
         <table>
           <thead>
@@ -19,52 +22,66 @@
             </tr>
           </thead>
           <tbody id="users-table">
-            <tr id="">
-              <td class="name">
-                <img src="./images/user1.png" />
-                <span>User 1</span>
-              </td>
-              <td>email@email.com</td>
-              <td class="manage">
-                <img src="./images/trash.png" alt="Delete" />
-              </td>
-            </tr>
+            <!-- Iterate through users array to display each user -->
+            <% users.forEach(function(user) { %>
+              <tr id="<%= user._id %>">
+                <td class="name">
+                  <!-- Display user avatar if exists, otherwise show default image -->
+                  <% if (user.avatar) { %>
+                    <img src="./uploads/avatars/<%= user.avatar %>" />
+                  <% } else { %>
+                    <img src="./images/nophoto.png" />
+                    <% } %>
+                  <span><%= user.name %></span>
+                </td>
+                <td><%= user.email %></td>
+                <td class="manage">
+                  <!-- Delete user button with event handler -->
+                  <img src="./images/trash.png" alt="Delete" onclick="deleteUser('<%= user._id %>')"/>
+                </td>
+              </tr>
+            <% }); %>
           </tbody>
         </table>
       </div>
     </div>
+    <!-- Include add user modal partial -->
+    <%- include('./partials/add-user-modal.ejs'); %>
 
-    <div class="modal-wrapper" id="add-user-modal">
-      <div class="modal">
-        <a href="#" onclick="closeModal()" class="modal-close">+</a>
-        <div class="modal-title">
-          <h2>Create New User</h2>
-        </div>
-        <div class="modal-body">
-          <form id="add-user-form">
-            <input type="text" placeholder="enter name" name="name" />
-            <p class="error show">This is error</p>
-            <input type="text" placeholder="enter email" name="email" />
-            <input type="text" placeholder="enter mobile" name="mobile" />
-            <input
-              type="password"
-              placeholder="enter password"
-              name="password"
-            />
-            <input type="file" name="avatar" />
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
-      </div>
-    </div>
     <script>
-      const modal = document.querySelector("#add-user-modal");
-      function closeModal() {
-        modal.style.display = "none";
-      }
-      function openModal() {
-        modal.style.display = "block";
-      }
+        // Toast notification configuration for successful user deletion
+        const deleteToast = Toastify({
+            text: "User was deleted successfully!",
+            duration: 3000,
+        });
+
+        // Toast notification configuration for failed user deletion
+        const deleteErrorToast = Toastify({
+            text: "Could not delete the user!",
+            duration: 3000,
+        });
+        
+        /**
+         * Handles user deletion through API call
+         * @async
+         * @param {string} userId - The ID of the user to be deleted
+         * @returns {void}
+         */
+        async function deleteUser(userId) {
+            let response = await fetch(`/users/${userId}`, {
+                method: "DELETE",
+            });
+
+            let result = await response.json();
+
+            // Show appropriate toast notification based on deletion result
+            if (result.errors) {
+                deleteErrorToast.showToast();
+            } else {
+                deleteToast.showToast();
+                document.getElementById(userId).remove();
+            }
+        }
     </script>
   </body>
 </html>
